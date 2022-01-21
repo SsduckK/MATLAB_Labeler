@@ -1,5 +1,3 @@
-file_input = open('home/ri/workspace/MATLAB/SamplegTruth.mat');
-
 mkdir labels
 
 gTruth = file_input.gTruth;
