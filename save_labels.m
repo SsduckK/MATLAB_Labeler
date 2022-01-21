@@ -1,7 +1,3 @@
-Rect_file_output = 'Rect.txt';
-Line_file_output = 'Line.txt';
-file_input = open('home/ri/workspace/MATLAB/SamplegTruth.mat');
-
 mkdir labels
 
 gTruth = file_input.gTruth
