@@ -1,6 +1,6 @@
 mkdir labels
 
-gTruth = file_input.gTruth
+gTruth = file_input.gTruth;
 [numRows, numCols] = size(gTruth.LabelData);
 
 % for each file
@@ -38,13 +38,13 @@ for row = 1:numRows
 
         [numLinecell, non] = size(Data.(1){1});
         Linecell = [];
-        fprintf(fid, '[')
+        fprintf(fid, '[');
         for countLine = 1:numLinecell
             lane = round(Data.(1){1}{countLine}, 2);
 
-            temp_value1 = jsonencode(round(Data.(1){1}{countLine}, 2))
-            temp_value2 = string(temp_value1(2:end))
-            fprintf(fid, '["차선%d", %s', countLine, temp_value2)
+            temp_value1 = jsonencode(round(Data.(1){1}{countLine}, 2));
+            temp_value2 = string(temp_value1(2:end));
+            fprintf(fid, '["차선%d", %s', countLine, temp_value2);
 
             if countLine == numLinecell
                 fprintf(fid, ']');
@@ -54,3 +54,4 @@ for row = 1:numRows
         end
     end
 end
+
