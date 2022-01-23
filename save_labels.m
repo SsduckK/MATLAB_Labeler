@@ -28,7 +28,8 @@ for row = 1:numRows
     end
 
     fprintf(fid, "---\n");
-
+    CheckLineStatus = 0;
+    AnyLine = 0;
     for col = 1:numCols
         Data = Rows(:, col);
         LabelName = gTruth.LabelDefinitions.Description{col};
@@ -38,20 +39,28 @@ for row = 1:numRows
 
         [numLinecell, non] = size(Data.(1){1});
         Linecell = [];
-        fprintf(fid, '[');
+        if CheckLineStatus == 0
+            fprintf(fid, '[');
+        elseif CheckLineStatus == 1
+            fprintf(fid, ',');
+        end
+        CheckLineStatus = 0;
         for countLine = 1:numLinecell
             lane = round(Data.(1){1}{countLine}, 2);
 
             temp_value1 = jsonencode(round(Data.(1){1}{countLine}, 2));
             temp_value2 = string(temp_value1(2:end));
-            fprintf(fid, '["차선%d", %s', countLine, temp_value2);
+            fprintf(fid, '["%s %d", %s', LabelName, countLine, temp_value2);
 
-            if countLine == numLinecell
-                fprintf(fid, ']');
-            else
-                fprintf(fid, ', ');
+            if countLine ~= numLinecell
+                fprintf(fid, ',');
             end
         end
+        CheckLineStatus = CheckLineStatus + 1;
+        AnyLine = 1
+    end
+
+    if AnyLine == 1
+        fprintf(fid, ']');
     end
 end
-
