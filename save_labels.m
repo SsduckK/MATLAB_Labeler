@@ -50,17 +50,18 @@ for row = 1:numRows
 
             temp_value1 = jsonencode(round(Data.(1){1}{countLine}, 2));
             temp_value2 = string(temp_value1(2:end));
-            fprintf(fid, '["%s %d", %s', LabelName, countLine, temp_value2);
+            fprintf(fid, '["%s, %s', LabelName, temp_value2);
 
             if countLine ~= numLinecell
                 fprintf(fid, ',');
             end
         end
         CheckLineStatus = CheckLineStatus + 1;
-        AnyLine = 1
+        AnyLine = 1;
     end
 
     if AnyLine == 1
         fprintf(fid, ']');
     end
 end
+
