@@ -50,7 +50,7 @@ for row = 1:numRows
 
             temp_value1 = jsonencode(round(Data.(1){1}{countLine}, 2));
             temp_value2 = string(temp_value1(2:end));
-            fprintf(fid, '["%s, %s', LabelName, temp_value2);
+            fprintf(fid, '["%s", %s', LabelName, temp_value2);
 
             if countLine ~= numLinecell
                 fprintf(fid, ',');
