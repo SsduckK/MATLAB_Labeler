@@ -6,6 +6,7 @@ labels = split(labels, '---');
 labels_box = split(labels{1}, newline);
 labels_line = jsondecode(labels{2});
 
+car_position = [];
 
 for box_index = 2:length(labels_box)
     box_data = split(labels_box(box_index), ',');
@@ -17,18 +18,17 @@ for box_index = 2:length(labels_box)
     y = str2double(box_data{2});
     w = str2double(box_data{5});
     h = str2double(box_data{4});
-    position = [x y w h];   
-
+    position = [x y w h];
     switch label_name
         case '승용차'
-            LabelData.Car{1} = position
+            LabelData.Car{1} = [LabelData.Car{1}; position];
         case '사람'
-            LabelData.Person{1} = position
+            LabelData.Person{1} = [LabelData.Person{1}; position];
         case '신호등'
-            LabelData.TrafficLight{1} = position
+            LabelData.TrafficLight{1} = [LabelData.TrafficLight{1}; position];
     end
 end
 
-New_Label_Data = LabelData;
+New_Label_Data = LabelData
 
 New_gTruth = groundTruth(file_input.gTruth.DataSource, file_input.gTruth.LabelDefinitions, New_Label_Data);
