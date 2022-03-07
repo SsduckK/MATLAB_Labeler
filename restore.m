@@ -1,7 +1,8 @@
 file_input = open('/home/ri/workspace/MATLAB_Labeler/test_restoring.mat');
-labels = fileread('/home/ri/workspace/MATLAB/labels/000026.txt');
+labels = fileread('/home/ri/workspace/MATLAB/labels/000126.txt');
 fileattrib('/home/ri/workspace/MATLAB_Labeler/test_restoring.mat', '+w');
 LabelData = file_input.gTruth.LabelData;
+LabelDefinition = file_input.gTruth.LabelDefinitions;
 labels = split(labels, '---');
 labels_box = split(labels{1}, newline);
 labels_line = jsondecode(labels{2});
@@ -17,18 +18,10 @@ for box_index = 2:length(labels_box)
     w = str2double(box_data{5});
     h = str2double(box_data{4});
     box_position = [x y w h];
-    switch box_name
-        case '승용차'
-            LabelData.Car{1} = [LabelData.Car{1}; box_position];
-        case '사람'
-            LabelData.Person{1} = [LabelData.Person{1}; box_position];
-        case "Dont' Care"
-            LabelData.DontCare{1} = [LabelData.DontCare{1}; box_position];
-        case '신호등'
-            LabelData.TrafficLight{1} = [LabelData.TrafficLight{1}; box_position];
-        case 'RM횡단보도'
-            LabelData.RMCrossWalk{1} = [LabelData.RMCrossWalk{1}; box_position];
-    end
+
+    box_name_number = find(contains(LabelDefinition{:, 5}, box_name));
+    box_label_name = LabelDefinition{:, 1}{box_name_number};
+    LabelData{:, box_name_number}{1} = [LabelData{:, box_name_number}{1}; box_position];
 end
 
 for line_index = 1:length(labels_line)
@@ -41,13 +34,13 @@ for line_index = 1:length(labels_line)
         line_point_array = [line_point_array; x y]
     end
     switch line_name
-            case '차선'
-                LabelData.Line{1} = [LabelData.Line{1}; line_point_array];
-            case 'RM정지선'
-                LabelData.RMStopLine{1} = [LabelData.RMStopLine{1}; line_point_array];
+        case '차선'
+            LabelData.Line{1} = [LabelData.Line{1}; line_point_array];
+        case 'RM정지선'
+            LabelData.RMStopLine{1} = [LabelData.RMStopLine{1}; line_point_array];
     end
 end
 
 New_Label_Data = LabelData;
 
-New_gTruth = groundTruth(file_input.gTruth.DataSource, file_input.gTruth.LabelDefinitions, New_Label_Data);
+New_gTruth = groundTruth(file_input.gTruth.DataSource, LabelDefinition, New_Label_Data);
