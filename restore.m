@@ -26,11 +26,13 @@ for cluster_index = 1:length(labels_cluster)
         box_label_name = LabelDefinition{:, 1}{box_name_number};
         LabelData{:, box_name_number}{cluster_index} = [LabelData{:, box_name_number}{cluster_index}; box_position];
     end
+
     if labels{2} == newline
         continue
     else
         labels_line = jsondecode(labels{2});
     end
+    
     for line_index = 1:length(labels_line)
         line_list = labels_line{line_index};
         line_name = labels_line{line_index}{1};
