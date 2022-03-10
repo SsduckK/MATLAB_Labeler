@@ -1,3 +1,5 @@
+file_input = open('home/ri/workspace/MATLAB/SamplegTruth.mat');
+
 mkdir labels
 
 gTruth = file_input.gTruth;
@@ -38,7 +40,6 @@ for row = 1:numRows
         end
 
         [numLinecell, non] = size(Data.(1){1});
-        Linecell = [];
         if CheckLineStatus == 0
             fprintf(fid, '[');
         elseif CheckLineStatus == 1
@@ -46,8 +47,6 @@ for row = 1:numRows
         end
         CheckLineStatus = 0;
         for countLine = 1:numLinecell
-            lane = round(Data.(1){1}{countLine}, 2);
-
             temp_value1 = jsonencode(round(Data.(1){1}{countLine}, 2));
             temp_value2 = string(temp_value1(2:end));
             fprintf(fid, '["%s", %s', LabelName, temp_value2);
@@ -64,4 +63,3 @@ for row = 1:numRows
         fprintf(fid, ']');
     end
 end
-
