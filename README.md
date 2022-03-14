@@ -1,4 +1,4 @@
-# MATLAb_Labeler
+# MATLAB_Labeler
 
 - matlab 의 Image Labeler를 이용한 gTruth를 기반으로 동작한다.
 - 해당 Image Labeler에서 생성된 gTruth 는 다음과 같은 데이터 구조를 가지고 있다.
