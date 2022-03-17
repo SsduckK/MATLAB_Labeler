@@ -1,4 +1,4 @@
-# save_label
+# write_label
 
 - matlab image labeler를 이용하여 만든 gTruth를 기반으로 라벨 데이터를 정리한다.
   - 라벨 데이터는 rectangle과 line 두 가지를 저장한다.
