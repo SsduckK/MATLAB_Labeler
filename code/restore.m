@@ -46,12 +46,10 @@ for file_idx = 1:length(label_files)
             y = line_list{line_point}(2);
             line_point_array = [line_point_array; x y];
         end
-        switch line_name
-            case '차선'
-                LabelData.Line{file_idx} = [LabelData.Line{file_idx}; line_point_array];
-            case 'RM정지선'
-                LabelData.RMStopLine{file_idx} = [LabelData.RMStopLine{file_idx}; line_point_array];
-        end
+        
+        line_name_number = find(strcmp(LabelDefinition{:, 5}, line_name));
+        line_label_name = LabelDefinition{:, 1}{line_name_number};
+        LabelData{:, line_name_number}{file_idx} = [LabelData{:, line_name_number}{file_idx}; line_point_array];
     end
 end
 
