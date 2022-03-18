@@ -1,10 +1,11 @@
-mkdir /home/ri/workspace/MATLAB/matfiles/
-
-file_dir = '/home/ri/workspace/MATLAB/matfiles';
 input_gTruth = New_gTruth;
 version = [];
 input_files = split(input_gTruth.DataSource.Source{1}, '/');
 input_files = input_files{6};
+
+mkdir('/home/ri/workspace/MATLAB/matfiles/', input_files)
+
+file_dir = strcat('/home/ri/workspace/MATLAB/matfiles/', input_files);
 
 file_directory = dir(file_dir);
 
