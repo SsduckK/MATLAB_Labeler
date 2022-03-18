@@ -1,10 +1,10 @@
-file_input = open('/home/ri/workspace/MATLAB_Labeler/test_restoring.mat');
+file_input = open('/home/ri/workspace/MATLAB_Labeler/data/test_restoring.mat');
 variableNames = {'Category', 'y', 'x', 'h', 'w', 'dist_'};
 TextscanFormats = {'%s', '%f', '%f','%f','%f','%f'};
-labels_datastore = datastore('/home/ri/workspace/Sample_Result_22.03.11/220209/magok/2022-02-09-19-54-16/label/', ...
+labels_datastore = datastore('/home/ri/workspace/Sample_Result_22.03.11/220209/magok/2022-02-09-19-53-05/label/', ...
     'TextscanFormats', TextscanFormats, 'ReadVariablenames', false, 'VariableNames', variableNames);
 label_files = labels_datastore.Files;
-fileattrib('/home/ri/workspace/MATLAB_Labeler/test_restoring.mat', '+w');
+fileattrib('/home/ri/workspace/MATLAB_Labeler/data/test_restoring.mat', '+w');
 LabelData = file_input.gTruth.LabelData;
 LabelDefinition = file_input.gTruth.LabelDefinitions;
 
