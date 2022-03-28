@@ -2,7 +2,7 @@
 SRC_MAT_FILE = '/home/ri/workspace/MATLAB/matfiles/220209/220209.1.mat';
 write_labels_to_text(SRC_MAT_FILE)
 
-function mat_file_path = write_labels_to_text(mat_file_path)
+function mat_file = write_labels_to_text(mat_file_path)
     file_input = open(mat_file_path);
     gTruth = file_input.input_gTruth;
     [numRows, numCols] = size(gTruth.LabelData);
