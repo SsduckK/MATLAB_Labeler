@@ -105,7 +105,8 @@ function save_gtruth_file(ground_truth, dst_mat_path)
     if ~exist(fullfile(dst_mat_path, dir_name))
         mkdir(fullfile(dst_mat_path, dir_name))
     end
-    time = yyyymmdd(datetime('now'));
+    time = split(datestr(datetime('now')), ' ');
+    time = time{2};
     output_mat = append(dir_name, '_', string(time));
     save(fullfile(dst_mat_path, dir_name, output_mat), 'ground_truth')
 end
