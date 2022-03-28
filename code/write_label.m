@@ -1,4 +1,4 @@
-% TODO: 실제 라벨 파일로 테스트 하기
+% TODO: 실제 라벨 파일로 테스트 하기 -> done
 SRC_MAT_FILE = '/home/ri/workspace/MATLAB/matfiles/220209/220209.1.mat';
 write_labels_to_text(SRC_MAT_FILE)
 
@@ -12,7 +12,7 @@ function mat_file_path = write_labels_to_text(mat_file_path)
         file_path = gTruth.DataSource.Source{row};
         name = split(file_path, "/");
         file_name = split(name{end}, ".");
-        % TODO: 이미지 파일 경로에서 image -> label 로 바꿔서 경로 생성
+        % TODO: 이미지 파일 경로에서 image -> label 로 바꿔서 경로 생성 -> done
         % 폴더가 없으면 폴더 만들기
         label_path = replace(file_path, 'image', 'labels');
         label_path = extractBefore(label_path, file_name{1});
