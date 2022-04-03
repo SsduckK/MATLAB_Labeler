@@ -28,7 +28,7 @@ function source_files = list_image_files(image_path)
     data_source = dir(fullfile(image_path, '*.jpg'));
     data = [];
     for i = 1:length(data_source)
-        image_name = strcat(data_source(i).folder, '/', data_source(i).name)
+        image_name = strcat(data_source(i).folder, '/', data_source(i).name);
         data = [data; image_name];
         data = cellstr(data);
     end
@@ -57,6 +57,7 @@ function data_file = read_label_data(image_path, def_path, label_path)
 
     for file_idx = 1:length(label_files)
         labels = fileread(label_files{file_idx});
+        label_files{file_idx};
         labels = split(labels, '---');
         labels_box = split(labels{1}, newline);
         
@@ -88,7 +89,7 @@ function data_file = read_label_data(image_path, def_path, label_path)
             line_list = labels_line{line_index};
             line_name = labels_line{line_index}{1};
             line_point_array = [];
-            temp_cell = []
+            perfect_line = [];
             for line_point = 2:length(line_list)
                 if length(line_list) == 3
                     continue
@@ -99,9 +100,9 @@ function data_file = read_label_data(image_path, def_path, label_path)
             end
             %라인분리 해결 되었는데 이상한데서 에러 남 파악하고 수정해
             
-            temp_cell = [temp_cell; {line_point_array}]
+            perfect_line = [perfect_line; {line_point_array}];
             line_name_number = find(strcmp(label_definition{:, 5}, line_name));
-            template_table{:, line_name_number}{file_idx} = [template_table{:, line_name_number}{file_idx}; temp_cell];
+            template_table{:, line_name_number}{file_idx} = [template_table{:, line_name_number}{file_idx}; perfect_line];
         end
 
     end
