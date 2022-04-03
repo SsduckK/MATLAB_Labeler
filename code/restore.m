@@ -12,7 +12,7 @@ for input = 3:size(data_path)
     LABEL_ROOT = fullfile(data_dir, '/label');
     reconstruct_label_data(IMAGE_ROOT, DEFINITION_ROOT, LABEL_ROOT, DST_MAT_PATH)
 end
-save_original(DATASET_ROOT)
+%save_original(DATASET_ROOT)
 
 
 function ground_truth = reconstruct_label_data(image_path, definition_path, label_path, dst_mat_path)
@@ -83,14 +83,12 @@ function data_file = read_label_data(image_path, def_path, label_path)
         else
             labels_line = jsondecode(labels{2});
         end
-        temp_cell = []
+
         for line_index = 1:length(labels_line)
             line_list = labels_line{line_index};
             line_name = labels_line{line_index}{1};
             line_point_array = [];
-            
-            perfect_line = cell(length(line_list)-1);
-            perfect_line = perfect_line(:, 1);
+            temp_cell = []
             for line_point = 2:length(line_list)
                 if length(line_list) == 3
                     continue
@@ -99,11 +97,13 @@ function data_file = read_label_data(image_path, def_path, label_path)
                 y = line_list{line_point}(2);
                 line_point_array = [line_point_array; x y];
             end
-            %라인 분리는 해결했는데 분류가 이상하게 되니 해결해
+            %라인분리 해결 되었는데 이상한데서 에러 남 파악하고 수정해
+            
             temp_cell = [temp_cell; {line_point_array}]
+            line_name_number = find(strcmp(label_definition{:, 5}, line_name));
+            template_table{:, line_name_number}{file_idx} = [template_table{:, line_name_number}{file_idx}; temp_cell];
         end
-        line_name_number = find(strcmp(label_definition{:, 5}, line_name));
-        template_table{:, line_name_number}{file_idx} = temp_cell;
+
     end
 
     data_file = template_table;
@@ -111,7 +111,7 @@ end
 
 function save_gtruth_file(ground_truth, dst_mat_path)
     dir_name = split(ground_truth.DataSource.Source{1}, '/');
-    dir_name = dir_name{9};
+    dir_name = dir_name{8};
     save_path = fullfile(dst_mat_path, 'matfiles', dir_name);
     if ~exist(save_path)
         mkdir(save_path)
