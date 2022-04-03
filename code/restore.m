@@ -98,7 +98,6 @@ function data_file = read_label_data(image_path, def_path, label_path)
                 y = line_list{line_point}(2);
                 line_point_array = [line_point_array; x y];
             end
-            %라인분리 해결 되었는데 이상한데서 에러 남 파악하고 수정해
             
             perfect_line = [perfect_line; {line_point_array}];
             line_name_number = find(strcmp(label_definition{:, 5}, line_name));
