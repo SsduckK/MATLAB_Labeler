@@ -1,9 +1,17 @@
-DATASET_ROOT = '/home/ri/1st_5000_data/1st_result/220209/magok';
+%DATASET_ROOT = '/home/ri/1st_5000_data/1st_result/220209/magok';
 %IMAGE_ROOT = fullfile(DATASET_ROOT, '/image');
 %LABEL_ROOT = fullfile(DATASET_ROOT, '/label');
 DEFINITION_ROOT = '/home/ri/workspace/MATLAB/line4Definition.mat';
 DST_MAT_PATH = '/home/ri/workspace/MATLAB/';
 
+%single file
+DATASET_ROOT = '/home/ri/1st_5000_data/1st_result/220209/magok/2022-02-09-20-16-46';
+IMAGE_ROOT = fullfile(DATASET_ROOT, '/image');
+LABEL_ROOT = fullfile(DATASET_ROOT, '/label');
+reconstruct_label_data(IMAGE_ROOT, DEFINITION_ROOT, LABEL_ROOT, DST_MAT_PATH)
+
+%multiple file
+%{
 data_path = dir(DATASET_ROOT);
 for input = 3:size(data_path)
     path = data_path(input).name;
@@ -13,7 +21,7 @@ for input = 3:size(data_path)
     reconstruct_label_data(IMAGE_ROOT, DEFINITION_ROOT, LABEL_ROOT, DST_MAT_PATH)
 end
 %save_original(DATASET_ROOT)
-
+%}
 
 function ground_truth = reconstruct_label_data(image_path, definition_path, label_path, dst_mat_path)
     source_files = list_image_files(image_path);
@@ -61,7 +69,7 @@ function data_file = read_label_data(image_path, def_path, label_path)
         labels = split(labels, '---');
         labels_box = split(labels{1}, newline);
         
-        for box_index = 1:length(labels_box)
+        for box_index = 1:length(labels_box)    %when first row is category, need to fix 2:length(labels_box)
             box_data = split(labels_box(box_index), ',');
             if isempty(box_data{1})
                 continue
