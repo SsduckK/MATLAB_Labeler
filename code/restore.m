@@ -5,7 +5,7 @@ DEFINITION_ROOT = '/home/ri/workspace/MATLAB/line4Definition.mat';
 DST_MAT_PATH = '/home/ri/workspace/MATLAB/';
 
 %single file
-DATASET_ROOT = '/home/ri/1st_5000_data/1st_result/220209/magok/2022-02-09-20-16-46';
+DATASET_ROOT = '/home/ri/1st_5000_data/1st_result/220209/magok/2022-02-09-20-43-44';
 IMAGE_ROOT = fullfile(DATASET_ROOT, '/image');
 LABEL_ROOT = fullfile(DATASET_ROOT, '/label');
 reconstruct_label_data(IMAGE_ROOT, DEFINITION_ROOT, LABEL_ROOT, DST_MAT_PATH)
@@ -69,7 +69,7 @@ function data_file = read_label_data(image_path, def_path, label_path)
         labels = split(labels, '---');
         labels_box = split(labels{1}, newline);
         
-        for box_index = 1:length(labels_box)    %when first row is category, need to fix 2:length(labels_box)
+        for box_index = 2:length(labels_box)    %when first row is category, need to fix 2:length(labels_box)
             box_data = split(labels_box(box_index), ',');
             if isempty(box_data{1})
                 continue
@@ -99,9 +99,9 @@ function data_file = read_label_data(image_path, def_path, label_path)
             line_point_array = [];
             perfect_line = [];
             for line_point = 2:length(line_list)
-                if length(line_list) == 3
-                    continue
-                end
+             %   if length(line_list) == 3
+              %      continue
+              %  end
                 x = line_list{line_point}(1);
                 y = line_list{line_point}(2);
                 line_point_array = [line_point_array; x y];
