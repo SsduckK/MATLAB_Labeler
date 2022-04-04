@@ -5,7 +5,7 @@ DEFINITION_ROOT = '/home/ri/workspace/MATLAB/line4Definition.mat';
 DST_MAT_PATH = '/home/ri/workspace/MATLAB/';
 
 %single file
-DATASET_ROOT = '/home/ri/1st_5000_data/1st_result/220209/magok/2022-02-09-20-43-44';
+DATASET_ROOT = '/home/ri/1st_5000_data/1st_result/220209/magok/2022-02-09-21-13-09';
 IMAGE_ROOT = fullfile(DATASET_ROOT, '/image');
 LABEL_ROOT = fullfile(DATASET_ROOT, '/label');
 reconstruct_label_data(IMAGE_ROOT, DEFINITION_ROOT, LABEL_ROOT, DST_MAT_PATH)
