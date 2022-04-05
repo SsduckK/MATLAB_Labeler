@@ -27,7 +27,7 @@ DST_MAT_PATH = '/home/dst/mat/path/matfiles';
   - 4개의 차선을 사용할 때 line4Definition.mat을 사용
 - DST_MAT_PATH - mat 파일을 저장할 경로
   - 만약 해당 경로가 존재하지 않을 경우 생성해줌
-
+- 단일 파일, 다수 파일은 둘 중 하나만 활성화 
 #### 단일 파일에 적용
 
 ```matlab
