@@ -1,12 +1,8 @@
 # restore.m
 
 - 작성되어있는 txt 파일을 기반으로 이미지에 라벨을 그림
-<<<<<<< HEAD
 -  Matlab Image Labeler에서 추출한 gTruth는 구조가 복잡하여 이를 직접 구현하는 것이 난점이었으나 하단에 후술될 트릭으로 해결
 - 본 구조는 save_label에서 만들어 낸 csv --- json 구조를 기반으로 복원한다.
-=======
-- 본 구조는 write_label에서 만들어 낸 csv --- json 구조를 기반으로 복원한다.
->>>>>>> 19090134263931d622ee5787bcb6dbc5f11a9fb1
   - 활용된 원리를 기반으로 하면 다른 구조에도 적용 가능
 
 
@@ -20,19 +16,46 @@
 #### 경로 설정
 
 ```matlab
-DATASET_ROOT = '/home/ri/workspace/Sample_Result_22.03.11/220209/magok/2022-02-09-19-53-05';
-IMAGE_ROOT = fullfile(DATASET_ROOT, '/image');
-LABEL_ROOT = fullfile(DATASET_ROOT, '/labels');
-DEFINITION_ROOT = '/home/ri/workspace/MATLAB/line1Definition.mat';
-DST_MAT_PATH = '/home/ri/workspace/MATLAB/matfiles';
+%DATASET_ROOT = '/home/data/set';
+DEFINITION_ROOT = '/home/definiton/root/line1Definition.mat';
+DST_MAT_PATH = '/home/dst/mat/path/matfiles';
 ```
 
-- DATASET_ROOT - 이미지 및 라벨 파일이 들어있는 경로
-- IMAGE, LABEL_ROOT - DATSET 하위에 존재하는 이미지, 라벨 폴더 경로
+- 데이터셋 경로. 하단의 단일 파일에 적용할 때는 비활성화 하기
 - DEFINITION_ROOT - 사전 생성해둔 LabelDefinition
+  - 단일 차선만 사용할 때 line1Definition.mat을 사용
+  - 4개의 차선을 사용할 때 line4Definition.mat을 사용
 - DST_MAT_PATH - mat 파일을 저장할 경로
+  - 만약 해당 경로가 존재하지 않을 경우 생성해줌
 
+#### 단일 파일에 적용
 
+```matlab
+DATASET_ROOT = '/home/data/set/root/';
+IMAGE_ROOT = fullfile(DATASET_ROOT, '/image');
+LABEL_ROOT = fullfile(DATASET_ROOT, '/label');
+reconstruct_label_data(IMAGE_ROOT, DEFINITION_ROOT, LABEL_ROOT, DST_MAT_PATH)
+```
+
+- DATASET_ROOT - 하위에 image, label이 들어가있는 단일 폴더
+- 하위 image, label 경로를 지정해준 후 reconstruct_label_data 함수를 실행 시켜 본 파일의 mat file을 생성한다.
+
+#### 다수의 파일에 적용
+
+```matlab
+data_path = dir(DATASET_ROOT);
+for input = 3:size(data_path)
+    path = data_path(input).name;
+    data_dir = fullfile(DATASET_ROOT, path);
+    IMAGE_ROOT = fullfile(data_dir, '/image');
+    LABEL_ROOT = fullfile(data_dir, '/label');
+    reconstruct_label_data(IMAGE_ROOT, DEFINITION_ROOT, LABEL_ROOT, DST_MAT_PATH)
+end
+```
+
+- 단일 파일보다 한단계 위의 폴더를 경로로 함으로 여러개의 단일 파일에 적용하는 구조
+- 반복문을 통해 해당 경로 아래의 파일들마다 시행
+- 동작 원리는 단일파일 적용과 같음
 
 #### reconstruct_label_data
 
@@ -135,7 +158,7 @@ for file_idx = 1:length(labels_files)	//(1)번 for라 함. 마지막에 end 존�
     labels = split(labels, '---');			  // --- 로 split 하여 csv, json을 나눔
     labels_box = split(labels{1}, newline);	  // csv를 labels_box에 입력
     
-    for box_index = 2:length(labels_box)		//각각의 labelbox에 대해 수행	**
+    for box_index = 2:length(labels_box)		//각각의 labelbox에 대해 수행	** Category가 있으면 2
         box_data = split(labels_box(box_index), ',');	//', '로 나누어진 정보를 읽기 위함
         if isempty(box_data{1})		//labelbox가 없을 때
             continue
@@ -183,25 +206,27 @@ for file_idx = 1:length(labels_files)	//(1)번 for라 함. 마지막에 end 존�
 ##### 차선
 
 ```matlab
-	for line_index = 1:length(labels_line)
-        line_list = labels_line{line_index};
-        line_name = labels_line{line_index}{1};		//line의 이름을 저장
-        line_point_array = [];		//cell 구조로 저장된 line을 담기 위한 matrix
-        for line_point = 2:length(line_list)	//line_list의 두번째 부터 point가 찍힘	**	
-            if length(line_list) == 3
-            	continue
-            end	
-            x = line_list{line_point}(1);
-            y = line_list{line_point}(2);
-            line_point_array = [line_point_array; x y];	//point들을 저장
+    for line_index = 1:length(labels_line)
+            line_list = labels_line{line_index};
+            line_name = labels_line{line_index}{1};
+            line_point_array = [];
+            perfect_line = [];
+            for line_point = 2:length(line_list)
+                x = line_list{line_point}(1);
+                y = line_list{line_point}(2);
+                line_point_array = [line_point_array; x y];
+            end
+            
+            perfect_line = [perfect_line; {line_point_array}];
+            line_name_number = find(strcmp(label_definition{:, 5}, line_name));
+            template_table{:, line_name_number}{file_idx} = 
+            				[template_table{:, line_name_number}{file_idx}; perfect_line];
         end
-        
-        line_name_number = find(strcmp(LabelDefinition{:, 5}, line_name));	//box의 Description으로부터
-        line_label_name = LabelDefinition{:, 1}{line_name_number};			//Name을 찾는 과정과 동일
-        LabelData{:, line_name_number}{file_idx} =
-           [LabelData{:, line_name_number}{file_idx}; line_point_array];	
+
     end
-end	//(1)번 for의 end
+
+    data_file = template_table;
+end
 ```
 
 - label에서 ---을 기준으로 해서 json 형태로 작성된 라인을 처리하는 영역
@@ -209,10 +234,8 @@ end	//(1)번 for의 end
 - Line 타입은 같은 선 상의 point들이 하나의 matrix 구조로 저장되어 있으므로, 이를 위한 matrix를 line_point_array라고 지정하여 저장한다.
   - line_point_array에 저장된 point들이 모여 하나의 선을 구성한다.
   - 같은 종류의 선들이 모여 하나의 cell 아래에 저장되어있다.
-- line_list의 길이가 3일 경우 차선, 하나의 포인트(x, y)를 나타낼 때 이다.
-  - 하나의 포인트는 무시하므로 continue를 통해 무시한다.
-
 - 이러한 과정이 읽어온 매 파일마다 반복된다.
+- 완성된 template_table을 data_file로 저장한다.
 
 
 
@@ -221,7 +244,7 @@ end	//(1)번 for의 end
 ```matlab
 function save_gtruth_file(ground_truth, dst_mat_path)
     dir_name = split(ground_truth.DataSource.Source{1}, '/');
-    dir_name = dir_name{6};
+    dir_name = dir_name{6};	//저장할 파일의 이름은 여기서 결정
     if ~exist(fullfile(dst_mat_path, dir_name))
         mkdir(fullfile(dst_mat_path, dir_name))
     end
@@ -236,7 +259,9 @@ end
 - 완성한 groundtruth를 mat파일 형식으로 저장한다.
 
 - 저장 경로는 dst_mat_path 하의 dir_name이다.
-  - 여기서 dir_name은 Source의 저장 년/월/일이다.
-
+  - dir_name은 Source의 저장 년/월/일이다.
+  - dir_name을 '/'으로 스플릿 하였으므로 dir_name에는 여러개의 string이 cell로 저장
+  - 사용자가 원하는 이름을 선택
+  
 - 만약 폴더가 존재하지 않을 경우 지정된 경로에 파일을 만든다.
 - time에 HH:MM:SS 형식으로 현재 시각을 저장하여 mat 파일의 버전을 관리한다.

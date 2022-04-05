@@ -22,7 +22,7 @@ function mat_file = write_labels_to_text(mat_file_path)
         file_output = [label_path, file_name{1}, '.txt'];
         fid = fopen(file_output, "w");
     
-        fprintf(fid, 'Category, y, x, h, w, dist.\n');
+        %fprintf(fid, 'Category, y, x, h, w, dist.\n');
         Rows = gTruth.LabelData(row, :);
         for col = 1:numCols
             Data = Rows(:, col);
